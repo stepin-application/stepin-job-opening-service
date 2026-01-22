@@ -6,6 +6,7 @@ public class JobOpeningCreateRequest {
 
     @NotBlank
     private String title;
+    @NotBlank
     private String description;
     private String requirements;
 
