@@ -54,6 +54,71 @@ public class JobOpeningService {
     }
 
     /**
+     * Lists all job openings for a specific company.
+     *
+     * @param companyId the company UUID
+     * @return list of JobOpeningResponse DTOs
+     */
+    public List<JobOpeningResponse> listJobOpeningsByCompany(UUID companyId) {
+        logger.debug("Listing job openings for companyId={}", companyId);
+
+        List<JobOpening> jobOpenings = jobOpeningRepository.findByCompanyId(companyId);
+
+        logger.debug("Found {} job openings", jobOpenings.size());
+
+        return jobOpenings.stream()
+                .map(mapper::toResponse)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Gets a job opening by id.
+     *
+     * @param jobId the job opening UUID
+     * @return JobOpeningResponse DTO
+     */
+    public JobOpeningResponse getJobOpening(UUID jobId) {
+        JobOpening jobOpening = jobOpeningRepository.findById(jobId)
+                .orElseThrow(() -> {
+                    logger.warn("Job opening not found: id={}", jobId);
+                    return new ResourceNotFoundException("Job opening not found");
+                });
+
+        return mapper.toResponse(jobOpening);
+    }
+
+    /**
+     * Updates an existing job opening by id.
+     *
+     * @param jobId   the job opening UUID
+     * @param request the job opening update request
+     * @return the updated JobOpeningResponse DTO
+     */
+    public JobOpeningResponse updateJobOpening(UUID jobId, JobOpeningUpdateRequest request) {
+        JobOpening jobOpening = jobOpeningRepository.findById(jobId)
+                .orElseThrow(() -> {
+                    logger.warn("Job opening not found: id={}", jobId);
+                    return new ResourceNotFoundException("Job opening not found");
+                });
+
+        EligibilityResponse eligibility = campaignServiceClient.checkEligibility(
+                jobOpening.getCampaignId(), jobOpening.getCompanyId());
+        if (!eligibility.isCanMutateJobs()) {
+            logger.warn("Company not eligible to update job opening: {}", eligibility.getReason());
+            throw new BusinessException(eligibility.getReason());
+        }
+
+        mapper.updateEntity(request, jobOpening);
+        jobOpening.setUpdatedAt(OffsetDateTime.now());
+
+        JobOpening updatedJobOpening = jobOpeningRepository.save(jobOpening);
+
+        logger.info("Updated job opening with id={}", updatedJobOpening.getId());
+
+        return mapper.toResponse(updatedJobOpening);
+    }
+
+    /**
      * Creates a new job opening after checking eligibility.
      *
      * @param campaignId the campaign UUID
@@ -271,6 +336,30 @@ public class JobOpeningService {
                 });
 
         // Delete job opening
+        jobOpeningRepository.delete(jobOpening);
+
+        logger.info("Deleted job opening with id={}", jobId);
+    }
+
+    /**
+     * Deletes a job opening by id.
+     *
+     * @param jobId the job opening UUID
+     */
+    public void deleteJobOpening(UUID jobId) {
+        JobOpening jobOpening = jobOpeningRepository.findById(jobId)
+                .orElseThrow(() -> {
+                    logger.warn("Job opening not found: id={}", jobId);
+                    return new ResourceNotFoundException("Job opening not found");
+                });
+
+        EligibilityResponse eligibility = campaignServiceClient.checkEligibility(
+                jobOpening.getCampaignId(), jobOpening.getCompanyId());
+        if (!eligibility.isCanMutateJobs()) {
+            logger.warn("Company not eligible to delete job opening: {}", eligibility.getReason());
+            throw new BusinessException(eligibility.getReason());
+        }
+
         jobOpeningRepository.delete(jobOpening);
 
         logger.info("Deleted job opening with id={}", jobId);
