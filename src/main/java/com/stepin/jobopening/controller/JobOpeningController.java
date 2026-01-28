@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/campaigns/{campaignId}/companies/{companyId}/job-openings")
 public class JobOpeningController {
 
     private final JobOpeningService jobOpeningService;
@@ -28,11 +27,33 @@ public class JobOpeningController {
      * @param companyId  the company UUID
      * @return list of JobOpeningResponse DTOs
      */
-    @GetMapping
+    @GetMapping("/campaigns/{campaignId}/companies/{companyId}/job-openings")
     public List<JobOpeningResponse> listJobOpenings(
             @PathVariable UUID campaignId,
             @PathVariable UUID companyId) {
         return jobOpeningService.listJobOpenings(campaignId, companyId);
+    }
+
+    /**
+     * Lists all job openings for a specific company across all campaigns.
+     *
+     * @param companyId the company UUID
+     * @return list of JobOpeningResponse DTOs
+     */
+    @GetMapping("/companies/{companyId}/job-openings")
+    public List<JobOpeningResponse> listJobOpeningsByCompany(@PathVariable UUID companyId) {
+        return jobOpeningService.listJobOpeningsByCompany(companyId);
+    }
+
+    /**
+     * Lists all job openings for a specific campaign across all companies.
+     *
+     * @param campaignId the campaign UUID
+     * @return list of JobOpeningResponse DTOs
+     */
+    @GetMapping("/campaigns/{campaignId}/job-openings")
+    public List<JobOpeningResponse> listJobOpeningsByCampaign(@PathVariable UUID campaignId) {
+        return jobOpeningService.listJobOpeningsByCampaign(campaignId);
     }
 
     /**
@@ -43,7 +64,7 @@ public class JobOpeningController {
      * @param request    the job opening creation request
      * @return the created JobOpeningResponse DTO
      */
-    @PostMapping
+    @PostMapping("/campaigns/{campaignId}/companies/{companyId}/job-openings")
     @ResponseStatus(HttpStatus.CREATED)
     public JobOpeningResponse createJobOpening(
             @PathVariable UUID campaignId,
@@ -61,7 +82,7 @@ public class JobOpeningController {
      * @param request    the job opening update request
      * @return the updated JobOpeningResponse DTO
      */
-    @PutMapping("/{jobId}")
+    @PutMapping("/campaigns/{campaignId}/companies/{companyId}/job-openings/{jobId}")
     public JobOpeningResponse updateJobOpening(
             @PathVariable UUID campaignId,
             @PathVariable UUID companyId,
@@ -77,12 +98,48 @@ public class JobOpeningController {
      * @param companyId  the company UUID
      * @param jobId      the job opening UUID
      */
-    @DeleteMapping("/{jobId}")
+    @DeleteMapping("/campaigns/{campaignId}/companies/{companyId}/job-openings/{jobId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteJobOpening(
             @PathVariable UUID campaignId,
             @PathVariable UUID companyId,
             @PathVariable UUID jobId) {
         jobOpeningService.deleteJobOpening(campaignId, companyId, jobId);
+    }
+
+    /**
+     * Gets a specific job opening by ID.
+     *
+     * @param jobId the job opening UUID
+     * @return the JobOpeningResponse DTO
+     */
+    @GetMapping("/job-openings/{jobId}")
+    public JobOpeningResponse getJobOpening(@PathVariable UUID jobId) {
+        return jobOpeningService.getJobOpening(jobId);
+    }
+
+    /**
+     * Updates a job opening by ID.
+     *
+     * @param jobId   the job opening UUID
+     * @param request the job opening update request
+     * @return the updated JobOpeningResponse DTO
+     */
+    @PutMapping("/job-openings/{jobId}")
+    public JobOpeningResponse updateJobOpeningById(
+            @PathVariable UUID jobId,
+            @Valid @RequestBody JobOpeningUpdateRequest request) {
+        return jobOpeningService.updateJobOpeningById(jobId, request);
+    }
+
+    /**
+     * Deletes a job opening by ID.
+     *
+     * @param jobId the job opening UUID
+     */
+    @DeleteMapping("/job-openings/{jobId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteJobOpeningById(@PathVariable UUID jobId) {
+        jobOpeningService.deleteJobOpeningById(jobId);
     }
 }

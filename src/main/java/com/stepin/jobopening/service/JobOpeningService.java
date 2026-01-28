@@ -137,6 +137,110 @@ public class JobOpeningService {
     }
 
     /**
+     * Lists all job openings for a specific company across all campaigns.
+     *
+     * @param companyId the company UUID
+     * @return list of JobOpeningResponse DTOs
+     */
+    public List<JobOpeningResponse> listJobOpeningsByCompany(UUID companyId) {
+        logger.debug("Listing job openings for companyId={}", companyId);
+
+        List<JobOpening> jobOpenings = jobOpeningRepository.findByCompanyId(companyId);
+
+        logger.debug("Found {} job openings", jobOpenings.size());
+
+        return jobOpenings.stream()
+                .map(mapper::toResponse)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Lists all job openings for a specific campaign across all companies.
+     *
+     * @param campaignId the campaign UUID
+     * @return list of JobOpeningResponse DTOs
+     */
+    public List<JobOpeningResponse> listJobOpeningsByCampaign(UUID campaignId) {
+        logger.debug("Listing job openings for campaignId={}", campaignId);
+
+        List<JobOpening> jobOpenings = jobOpeningRepository.findByCampaignId(campaignId);
+
+        logger.debug("Found {} job openings", jobOpenings.size());
+
+        return jobOpenings.stream()
+                .map(mapper::toResponse)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Gets a specific job opening by ID.
+     *
+     * @param jobId the job opening UUID
+     * @return the JobOpeningResponse DTO
+     * @throws ResourceNotFoundException if the job opening is not found
+     */
+    public JobOpeningResponse getJobOpening(UUID jobId) {
+        logger.debug("Getting job opening id={}", jobId);
+
+        JobOpening jobOpening = jobOpeningRepository.findById(jobId)
+                .orElseThrow(() -> {
+                    logger.warn("Job opening not found: id={}", jobId);
+                    return new ResourceNotFoundException("Job opening not found");
+                });
+
+        return mapper.toResponse(jobOpening);
+    }
+
+    /**
+     * Updates a job opening by ID without eligibility check.
+     *
+     * @param jobId   the job opening UUID
+     * @param request the job opening update request
+     * @return the updated JobOpeningResponse DTO
+     * @throws ResourceNotFoundException if the job opening is not found
+     */
+    public JobOpeningResponse updateJobOpeningById(UUID jobId, JobOpeningUpdateRequest request) {
+        logger.debug("Updating job opening id={}", jobId);
+
+        JobOpening jobOpening = jobOpeningRepository.findById(jobId)
+                .orElseThrow(() -> {
+                    logger.warn("Job opening not found: id={}", jobId);
+                    return new ResourceNotFoundException("Job opening not found");
+                });
+
+        // Update fields
+        mapper.updateEntity(request, jobOpening);
+        jobOpening.setUpdatedAt(OffsetDateTime.now());
+
+        JobOpening updatedJobOpening = jobOpeningRepository.save(jobOpening);
+
+        logger.info("Updated job opening with id={}", updatedJobOpening.getId());
+
+        return mapper.toResponse(updatedJobOpening);
+    }
+
+    /**
+     * Deletes a job opening by ID without eligibility check.
+     *
+     * @param jobId the job opening UUID
+     * @throws ResourceNotFoundException if the job opening is not found
+     */
+    public void deleteJobOpeningById(UUID jobId) {
+        logger.debug("Deleting job opening id={}", jobId);
+
+        JobOpening jobOpening = jobOpeningRepository.findById(jobId)
+                .orElseThrow(() -> {
+                    logger.warn("Job opening not found: id={}", jobId);
+                    return new ResourceNotFoundException("Job opening not found");
+                });
+
+        // Delete job opening
+        jobOpeningRepository.delete(jobOpening);
+
+        logger.info("Deleted job opening with id={}", jobId);
+    }
+
+    /**
      * Deletes a job opening after checking eligibility.
      *
      * @param campaignId the campaign UUID

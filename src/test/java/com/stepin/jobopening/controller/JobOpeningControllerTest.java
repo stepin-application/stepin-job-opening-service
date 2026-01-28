@@ -91,10 +91,10 @@ class JobOpeningControllerTest {
     @Test
     void createJobOpening_shouldReturnCreatedWithValidRequest() throws Exception {
         // Arrange
-        JobOpeningCreateRequest request = new JobOpeningCreateRequest(
-                "Software Engineer",
-                "Develop software",
-                "Java, Spring Boot");
+        JobOpeningCreateRequest request = new JobOpeningCreateRequest();
+        request.setTitle("Software Engineer");
+        request.setDescription("Develop software");
+        request.setRequirements("Java, Spring Boot");
 
         var response = createJobOpeningResponse(jobId, "Software Engineer");
 
@@ -120,10 +120,10 @@ class JobOpeningControllerTest {
     @Test
     void createJobOpening_shouldReturnBadRequestWhenTitleIsBlank() throws Exception {
         // Arrange
-        JobOpeningCreateRequest request = new JobOpeningCreateRequest(
-                "",
-                "Develop software",
-                "Java, Spring Boot");
+        JobOpeningCreateRequest request = new JobOpeningCreateRequest();
+        request.setTitle("");
+        request.setDescription("Develop software");
+        request.setRequirements("Java, Spring Boot");
 
         // Act & Assert
         mockMvc.perform(post(baseUrl)
@@ -141,10 +141,10 @@ class JobOpeningControllerTest {
     @Test
     void createJobOpening_shouldReturnBadRequestWhenTitleIsNull() throws Exception {
         // Arrange
-        JobOpeningCreateRequest request = new JobOpeningCreateRequest(
-                null,
-                "Develop software",
-                "Java, Spring Boot");
+        JobOpeningCreateRequest request = new JobOpeningCreateRequest();
+        request.setTitle(null);
+        request.setDescription("Develop software");
+        request.setRequirements("Java, Spring Boot");
 
         // Act & Assert
         mockMvc.perform(post(baseUrl)
@@ -162,10 +162,10 @@ class JobOpeningControllerTest {
     @Test
     void createJobOpening_shouldReturnConflictWhenCampaignIsLocked() throws Exception {
         // Arrange
-        JobOpeningCreateRequest request = new JobOpeningCreateRequest(
-                "Software Engineer",
-                "Develop software",
-                "Java, Spring Boot");
+        JobOpeningCreateRequest request = new JobOpeningCreateRequest();
+        request.setTitle("Software Engineer");
+        request.setDescription("Develop software");
+        request.setRequirements("Java, Spring Boot");
 
         when(jobOpeningService.createJobOpening(eq(campaignId), eq(companyId), any(JobOpeningCreateRequest.class)))
                 .thenThrow(new com.stepin.jobopening.exception.BusinessException("Campaign is locked"));
@@ -186,10 +186,10 @@ class JobOpeningControllerTest {
     @Test
     void createJobOpening_shouldReturnConflictWhenDeadlinePassed() throws Exception {
         // Arrange
-        JobOpeningCreateRequest request = new JobOpeningCreateRequest(
-                "Software Engineer",
-                "Develop software",
-                "Java, Spring Boot");
+        JobOpeningCreateRequest request = new JobOpeningCreateRequest();
+        request.setTitle("Software Engineer");
+        request.setDescription("Develop software");
+        request.setRequirements("Java, Spring Boot");
 
         when(jobOpeningService.createJobOpening(eq(campaignId), eq(companyId), any(JobOpeningCreateRequest.class)))
                 .thenThrow(new com.stepin.jobopening.exception.BusinessException("Campaign deadline has passed"));
@@ -210,10 +210,10 @@ class JobOpeningControllerTest {
     @Test
     void createJobOpening_shouldReturnConflictWhenInvitationNotAccepted() throws Exception {
         // Arrange
-        JobOpeningCreateRequest request = new JobOpeningCreateRequest(
-                "Software Engineer",
-                "Develop software",
-                "Java, Spring Boot");
+        JobOpeningCreateRequest request = new JobOpeningCreateRequest();
+        request.setTitle("Software Engineer");
+        request.setDescription("Develop software");
+        request.setRequirements("Java, Spring Boot");
 
         when(jobOpeningService.createJobOpening(eq(campaignId), eq(companyId), any(JobOpeningCreateRequest.class)))
                 .thenThrow(
@@ -235,10 +235,10 @@ class JobOpeningControllerTest {
     @Test
     void updateJobOpening_shouldReturnOkWithValidRequest() throws Exception {
         // Arrange
-        JobOpeningUpdateRequest request = new JobOpeningUpdateRequest(
-                "Senior Software Engineer",
-                "Lead software development",
-                "Java, Spring Boot, Microservices");
+        JobOpeningUpdateRequest request = new JobOpeningUpdateRequest();
+        request.setTitle("Senior Software Engineer");
+        request.setDescription("Lead software development");
+        request.setRequirements("Java, Spring Boot, Microservices");
 
         var response = createJobOpeningResponse(jobId, "Senior Software Engineer");
 
@@ -261,10 +261,10 @@ class JobOpeningControllerTest {
     @Test
     void updateJobOpening_shouldReturnBadRequestWhenTitleIsBlank() throws Exception {
         // Arrange
-        JobOpeningUpdateRequest request = new JobOpeningUpdateRequest(
-                "",
-                "Lead software development",
-                "Java, Spring Boot, Microservices");
+        JobOpeningUpdateRequest request = new JobOpeningUpdateRequest();
+        request.setTitle("");
+        request.setDescription("Lead software development");
+        request.setRequirements("Java, Spring Boot, Microservices");
 
         // Act & Assert
         mockMvc.perform(put(baseUrl + "/" + jobId)
@@ -282,10 +282,10 @@ class JobOpeningControllerTest {
     @Test
     void updateJobOpening_shouldReturnNotFoundWhenJobDoesNotExist() throws Exception {
         // Arrange
-        JobOpeningUpdateRequest request = new JobOpeningUpdateRequest(
-                "Senior Software Engineer",
-                "Lead software development",
-                "Java, Spring Boot, Microservices");
+        JobOpeningUpdateRequest request = new JobOpeningUpdateRequest();
+        request.setTitle("Senior Software Engineer");
+        request.setDescription("Lead software development");
+        request.setRequirements("Java, Spring Boot, Microservices");
 
         when(jobOpeningService.updateJobOpening(eq(campaignId), eq(companyId), eq(jobId),
                 any(JobOpeningUpdateRequest.class)))
@@ -307,10 +307,10 @@ class JobOpeningControllerTest {
     @Test
     void updateJobOpening_shouldReturnConflictWhenCampaignIsLocked() throws Exception {
         // Arrange
-        JobOpeningUpdateRequest request = new JobOpeningUpdateRequest(
-                "Senior Software Engineer",
-                "Lead software development",
-                "Java, Spring Boot, Microservices");
+        JobOpeningUpdateRequest request = new JobOpeningUpdateRequest();
+        request.setTitle("Senior Software Engineer");
+        request.setDescription("Lead software development");
+        request.setRequirements("Java, Spring Boot, Microservices");
 
         when(jobOpeningService.updateJobOpening(eq(campaignId), eq(companyId), eq(jobId),
                 any(JobOpeningUpdateRequest.class)))

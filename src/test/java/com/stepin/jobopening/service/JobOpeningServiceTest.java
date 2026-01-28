@@ -106,10 +106,10 @@ class JobOpeningServiceTest {
     @Test
     void createJobOpening_shouldCreateJobOpeningWhenEligible() {
         // Arrange
-        JobOpeningCreateRequest request = new JobOpeningCreateRequest(
-                "Software Engineer",
-                "Develop software",
-                "Java, Spring Boot");
+        JobOpeningCreateRequest request = new JobOpeningCreateRequest();
+        request.setTitle("Software Engineer");
+        request.setDescription("Develop software");
+        request.setRequirements("Java, Spring Boot");
 
         EligibilityResponse eligibility = new EligibilityResponse(true, "");
         when(campaignServiceClient.checkEligibility(campaignId, companyId)).thenReturn(eligibility);
@@ -136,10 +136,10 @@ class JobOpeningServiceTest {
     @Test
     void createJobOpening_shouldThrowBusinessExceptionWhenNotEligible() {
         // Arrange
-        JobOpeningCreateRequest request = new JobOpeningCreateRequest(
-                "Software Engineer",
-                "Develop software",
-                "Java, Spring Boot");
+        JobOpeningCreateRequest request = new JobOpeningCreateRequest();
+        request.setTitle("Software Engineer");
+        request.setDescription("Develop software");
+        request.setRequirements("Java, Spring Boot");
 
         EligibilityResponse eligibility = new EligibilityResponse(false, "Campaign is locked");
         when(campaignServiceClient.checkEligibility(campaignId, companyId)).thenReturn(eligibility);
@@ -157,10 +157,10 @@ class JobOpeningServiceTest {
     @Test
     void createJobOpening_shouldThrowBusinessExceptionWhenDeadlinePassed() {
         // Arrange
-        JobOpeningCreateRequest request = new JobOpeningCreateRequest(
-                "Software Engineer",
-                "Develop software",
-                "Java, Spring Boot");
+        JobOpeningCreateRequest request = new JobOpeningCreateRequest();
+        request.setTitle("Software Engineer");
+        request.setDescription("Develop software");
+        request.setRequirements("Java, Spring Boot");
 
         EligibilityResponse eligibility = new EligibilityResponse(false, "Campaign deadline has passed");
         when(campaignServiceClient.checkEligibility(campaignId, companyId)).thenReturn(eligibility);
@@ -178,10 +178,10 @@ class JobOpeningServiceTest {
     @Test
     void createJobOpening_shouldThrowBusinessExceptionWhenInvitationNotAccepted() {
         // Arrange
-        JobOpeningCreateRequest request = new JobOpeningCreateRequest(
-                "Software Engineer",
-                "Develop software",
-                "Java, Spring Boot");
+        JobOpeningCreateRequest request = new JobOpeningCreateRequest();
+        request.setTitle("Software Engineer");
+        request.setDescription("Develop software");
+        request.setRequirements("Java, Spring Boot");
 
         EligibilityResponse eligibility = new EligibilityResponse(false, "Company has not accepted invitation");
         when(campaignServiceClient.checkEligibility(campaignId, companyId)).thenReturn(eligibility);
@@ -199,10 +199,10 @@ class JobOpeningServiceTest {
     @Test
     void updateJobOpening_shouldUpdateJobOpeningWhenEligible() {
         // Arrange
-        JobOpeningUpdateRequest request = new JobOpeningUpdateRequest(
-                "Senior Software Engineer",
-                "Lead software development",
-                "Java, Spring Boot, Microservices");
+        JobOpeningUpdateRequest request = new JobOpeningUpdateRequest();
+        request.setTitle("Senior Software Engineer");
+        request.setDescription("Lead software development");
+        request.setRequirements("Java, Spring Boot, Microservices");
 
         EligibilityResponse eligibility = new EligibilityResponse(true, "");
         when(campaignServiceClient.checkEligibility(campaignId, companyId)).thenReturn(eligibility);
@@ -227,10 +227,10 @@ class JobOpeningServiceTest {
     @Test
     void updateJobOpening_shouldThrowBusinessExceptionWhenNotEligible() {
         // Arrange
-        JobOpeningUpdateRequest request = new JobOpeningUpdateRequest(
-                "Senior Software Engineer",
-                "Lead software development",
-                "Java, Spring Boot, Microservices");
+        JobOpeningUpdateRequest request = new JobOpeningUpdateRequest();
+        request.setTitle("Senior Software Engineer");
+        request.setDescription("Lead software development");
+        request.setRequirements("Java, Spring Boot, Microservices");
 
         EligibilityResponse eligibility = new EligibilityResponse(false, "Campaign is locked");
         when(campaignServiceClient.checkEligibility(campaignId, companyId)).thenReturn(eligibility);
@@ -249,10 +249,10 @@ class JobOpeningServiceTest {
     @Test
     void updateJobOpening_shouldThrowResourceNotFoundExceptionWhenJobNotFound() {
         // Arrange
-        JobOpeningUpdateRequest request = new JobOpeningUpdateRequest(
-                "Senior Software Engineer",
-                "Lead software development",
-                "Java, Spring Boot, Microservices");
+        JobOpeningUpdateRequest request = new JobOpeningUpdateRequest();
+        request.setTitle("Senior Software Engineer");
+        request.setDescription("Lead software development");
+        request.setRequirements("Java, Spring Boot, Microservices");
 
         EligibilityResponse eligibility = new EligibilityResponse(true, "");
         when(campaignServiceClient.checkEligibility(campaignId, companyId)).thenReturn(eligibility);

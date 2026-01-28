@@ -10,5 +10,9 @@ import java.util.UUID;
 public interface JobOpeningRepository extends JpaRepository<JobOpening, UUID> {
     List<JobOpening> findByCampaignIdAndCompanyId(UUID campaignId, UUID companyId);
 
+    List<JobOpening> findByCompanyId(UUID companyId);
+
+    List<JobOpening> findByCampaignId(UUID campaignId);
+
     Optional<JobOpening> findByIdAndCampaignIdAndCompanyId(UUID id, UUID campaignId, UUID companyId);
 }
