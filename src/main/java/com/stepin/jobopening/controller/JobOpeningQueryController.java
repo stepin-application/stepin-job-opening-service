@@ -35,12 +35,12 @@ public class JobOpeningQueryController {
     public JobOpeningResponse updateJobOpening(
             @PathVariable UUID jobId,
             @Valid @RequestBody JobOpeningUpdateRequest request) {
-        return jobOpeningService.updateJobOpening(jobId, request);
+        return jobOpeningService.updateJobOpeningById(jobId, request);
     }
 
     @DeleteMapping("/{jobId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteJobOpening(@PathVariable UUID jobId) {
-        jobOpeningService.deleteJobOpening(jobId);
+        jobOpeningService.deleteJobOpeningById(jobId);
     }
 }

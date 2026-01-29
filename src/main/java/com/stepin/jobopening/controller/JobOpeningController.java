@@ -35,17 +35,6 @@ public class JobOpeningController {
     }
 
     /**
-     * Lists all job openings for a specific company across all campaigns.
-     *
-     * @param companyId the company UUID
-     * @return list of JobOpeningResponse DTOs
-     */
-    @GetMapping("/companies/{companyId}/job-openings")
-    public List<JobOpeningResponse> listJobOpeningsByCompany(@PathVariable UUID companyId) {
-        return jobOpeningService.listJobOpeningsByCompany(companyId);
-    }
-
-    /**
      * Lists all job openings for a specific campaign across all companies.
      *
      * @param campaignId the campaign UUID
@@ -107,39 +96,4 @@ public class JobOpeningController {
         jobOpeningService.deleteJobOpening(campaignId, companyId, jobId);
     }
 
-    /**
-     * Gets a specific job opening by ID.
-     *
-     * @param jobId the job opening UUID
-     * @return the JobOpeningResponse DTO
-     */
-    @GetMapping("/job-openings/{jobId}")
-    public JobOpeningResponse getJobOpening(@PathVariable UUID jobId) {
-        return jobOpeningService.getJobOpening(jobId);
-    }
-
-    /**
-     * Updates a job opening by ID.
-     *
-     * @param jobId   the job opening UUID
-     * @param request the job opening update request
-     * @return the updated JobOpeningResponse DTO
-     */
-    @PutMapping("/job-openings/{jobId}")
-    public JobOpeningResponse updateJobOpeningById(
-            @PathVariable UUID jobId,
-            @Valid @RequestBody JobOpeningUpdateRequest request) {
-        return jobOpeningService.updateJobOpeningById(jobId, request);
-    }
-
-    /**
-     * Deletes a job opening by ID.
-     *
-     * @param jobId the job opening UUID
-     */
-    @DeleteMapping("/job-openings/{jobId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteJobOpeningById(@PathVariable UUID jobId) {
-        jobOpeningService.deleteJobOpeningById(jobId);
-    }
 }

@@ -201,23 +201,7 @@ public class JobOpeningService {
         return mapper.toResponse(updatedJobOpening);
     }
 
-    /**
-     * Lists all job openings for a specific company across all campaigns.
-     *
-     * @param companyId the company UUID
-     * @return list of JobOpeningResponse DTOs
-     */
-    public List<JobOpeningResponse> listJobOpeningsByCompany(UUID companyId) {
-        logger.debug("Listing job openings for companyId={}", companyId);
 
-        List<JobOpening> jobOpenings = jobOpeningRepository.findByCompanyId(companyId);
-
-        logger.debug("Found {} job openings", jobOpenings.size());
-
-        return jobOpenings.stream()
-                .map(mapper::toResponse)
-                .collect(Collectors.toList());
-    }
 
     /**
      * Lists all job openings for a specific campaign across all companies.
@@ -237,24 +221,7 @@ public class JobOpeningService {
                 .collect(Collectors.toList());
     }
 
-    /**
-     * Gets a specific job opening by ID.
-     *
-     * @param jobId the job opening UUID
-     * @return the JobOpeningResponse DTO
-     * @throws ResourceNotFoundException if the job opening is not found
-     */
-    public JobOpeningResponse getJobOpening(UUID jobId) {
-        logger.debug("Getting job opening id={}", jobId);
 
-        JobOpening jobOpening = jobOpeningRepository.findById(jobId)
-                .orElseThrow(() -> {
-                    logger.warn("Job opening not found: id={}", jobId);
-                    return new ResourceNotFoundException("Job opening not found");
-                });
-
-        return mapper.toResponse(jobOpening);
-    }
 
     /**
      * Updates a job opening by ID without eligibility check.
