@@ -162,7 +162,7 @@ class JobOpeningServiceTest {
         request.setDescription("Develop software");
         request.setRequirements("Java, Spring Boot");
 
-        EligibilityResponse eligibility = new EligibilityResponse(false, "Campaign deadline has passed");
+        EligibilityResponse eligibility = new EligibilityResponse(false, "Company deadline has passed");
         when(campaignServiceClient.checkEligibility(campaignId, companyId)).thenReturn(eligibility);
 
         // Act & Assert
@@ -170,7 +170,7 @@ class JobOpeningServiceTest {
             jobOpeningService.createJobOpening(campaignId, companyId, request);
         });
 
-        assertEquals("Campaign deadline has passed", exception.getMessage());
+        assertEquals("Company deadline has passed", exception.getMessage());
         verify(campaignServiceClient).checkEligibility(campaignId, companyId);
         verify(jobOpeningRepository, never()).save(any(JobOpening.class));
     }
@@ -290,7 +290,7 @@ class JobOpeningServiceTest {
     @Test
     void deleteJobOpening_shouldThrowBusinessExceptionWhenNotEligible() {
         // Arrange
-        EligibilityResponse eligibility = new EligibilityResponse(false, "Campaign deadline has passed");
+        EligibilityResponse eligibility = new EligibilityResponse(false, "Company deadline has passed");
         when(campaignServiceClient.checkEligibility(campaignId, companyId)).thenReturn(eligibility);
 
         // Act & Assert
@@ -298,7 +298,7 @@ class JobOpeningServiceTest {
             jobOpeningService.deleteJobOpening(campaignId, companyId, jobId);
         });
 
-        assertEquals("Campaign deadline has passed", exception.getMessage());
+        assertEquals("Company deadline has passed", exception.getMessage());
         verify(campaignServiceClient).checkEligibility(campaignId, companyId);
         verify(jobOpeningRepository, never()).findByIdAndCampaignIdAndCompanyId(any(), any(), any());
         verify(jobOpeningRepository, never()).delete(any(JobOpening.class));

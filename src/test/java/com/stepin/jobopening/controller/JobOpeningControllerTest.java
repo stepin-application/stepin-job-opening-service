@@ -192,7 +192,7 @@ class JobOpeningControllerTest {
         request.setRequirements("Java, Spring Boot");
 
         when(jobOpeningService.createJobOpening(eq(campaignId), eq(companyId), any(JobOpeningCreateRequest.class)))
-                .thenThrow(new com.stepin.jobopening.exception.BusinessException("Campaign deadline has passed"));
+                .thenThrow(new com.stepin.jobopening.exception.BusinessException("Company deadline has passed"));
 
         // Act & Assert
         mockMvc.perform(post(baseUrl)
@@ -202,7 +202,7 @@ class JobOpeningControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.status", is(409)))
                 .andExpect(jsonPath("$.error", is("Conflict")))
-                .andExpect(jsonPath("$.message", is("Campaign deadline has passed")))
+                .andExpect(jsonPath("$.message", is("Company deadline has passed")))
                 .andExpect(jsonPath("$.path", notNullValue()))
                 .andExpect(jsonPath("$.timestamp", notNullValue()));
     }
@@ -377,7 +377,7 @@ class JobOpeningControllerTest {
     @Test
     void deleteJobOpening_shouldReturnConflictWhenDeadlinePassed() throws Exception {
         // Arrange
-        doThrow(new com.stepin.jobopening.exception.BusinessException("Campaign deadline has passed"))
+        doThrow(new com.stepin.jobopening.exception.BusinessException("Company deadline has passed"))
                 .when(jobOpeningService).deleteJobOpening(campaignId, companyId, jobId);
 
         // Act & Assert
@@ -386,7 +386,7 @@ class JobOpeningControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.status", is(409)))
                 .andExpect(jsonPath("$.error", is("Conflict")))
-                .andExpect(jsonPath("$.message", is("Campaign deadline has passed")))
+                .andExpect(jsonPath("$.message", is("Company deadline has passed")))
                 .andExpect(jsonPath("$.path", notNullValue()))
                 .andExpect(jsonPath("$.timestamp", notNullValue()));
     }
